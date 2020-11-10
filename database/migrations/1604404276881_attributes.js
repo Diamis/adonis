@@ -27,7 +27,7 @@ class AttributesSchema extends Schema {
   }
 
   down() {
-    this.drop("attributes");
+    this.dropIfExists("attributes");
   }
 }
 

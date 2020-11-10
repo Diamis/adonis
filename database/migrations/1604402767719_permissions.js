@@ -13,10 +13,11 @@ class PermissionSchema extends Schema {
 
     this.create("model_has_permissions", (table) => {
       table.increments();
-      table.integer('permission_id')
-           .unsigned()
-           .references('id')
-           .inTable('permissions');
+      table
+        .integer("permission_id")
+        .unsigned()
+        .references("id")
+        .inTable("permissions");
       table.integer("model_id");
       table.string("model_type");
       table.timestamps();
@@ -24,8 +25,8 @@ class PermissionSchema extends Schema {
   }
 
   down() {
-    this.drop("model_has_permissions");
-    this.drop("permissions");
+    this.dropIfExists("model_has_permissions");
+    this.dropIfExists("permissions");
   }
 }
 

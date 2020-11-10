@@ -4,7 +4,7 @@ const Schema = use("Schema");
 
 class CurrenciesSchema extends Schema {
   up() {
-    this.create("attributes", (table) => {
+    this.create("currencies", (table) => {
       table.increments();
       table.boolean("enabled").nullable().default(true);
       table.string("code").unique();
@@ -15,7 +15,7 @@ class CurrenciesSchema extends Schema {
   }
 
   down() {
-    this.drop("attributes");
+    this.dropIfExists("currencies");
   }
 }
 

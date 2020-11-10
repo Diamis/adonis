@@ -13,7 +13,7 @@ class CompaniesSchema extends Schema {
   }
 
   down() {
-    this.drop("categories");
+    this.drop("companies");
   }
 }
 
