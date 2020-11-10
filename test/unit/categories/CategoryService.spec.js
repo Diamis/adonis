@@ -8,8 +8,14 @@ test("created", async ({ assert }) => {
   const service = new CategoryService();
 
   const name = faker.commerce.department();
+
+  let categories = await service.getList();
+  categories = await categories.toJSON();
+
+  const parentId = parseInt(Math.random() * categories.length) + 1;
   await service.create({
     name,
+    parentId,
   });
 
   assert.equal(2 + 2, 4);

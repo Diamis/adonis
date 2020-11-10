@@ -6,7 +6,7 @@ const Category = use("App/Core/Categories/Models/Category");
 
 class CategoryService {
   constructor() {
-    this.model = new Category();
+    this.model = Category;
   }
 
   findById(id, includes = []) {
@@ -16,8 +16,8 @@ class CategoryService {
     return query.find(id);
   }
 
-  getNestedList() {
-    return this.model;
+  async getList() {
+    return this.model.query().fetch();
   }
 
   getByParentId(parentId, includes = []) {
@@ -35,7 +35,6 @@ class CategoryService {
       slug = Translit.toLatin(name);
     }
 
-    const category = this.model;
     const data = toSnakeCase({
       name,
       slug,
@@ -43,9 +42,11 @@ class CategoryService {
       parentId,
     });
 
-    await category.create(data);
+    const category = await this.model.createNested(data);
 
-    console.log("category create [data]", data);
+    // console.log("category", category);
+    // console.log("categories", categories);
+    console.log("category create [category]", category);
   }
 
   update(data) {

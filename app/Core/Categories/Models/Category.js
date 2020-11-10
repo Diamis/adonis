@@ -1,8 +1,12 @@
 "use script";
 
-const Model = use("Model");
+const QueryBuilder = use("App/Core/Categories/QueryBuilder");
 
-class Category extends Model {
+class Category extends QueryBuilder {
+  static get table() {
+    return "categories";
+  }
+
   static boot() {
     super.boot();
   }
