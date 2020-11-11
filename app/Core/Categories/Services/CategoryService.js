@@ -9,18 +9,18 @@ class CategoryService {
     this.model = Category;
   }
 
-  findById(id, includes = []) {
+  async getList() {
+    return this.model.query().fetch();
+  }
+
+  async findById(id, includes = []) {
     let query = this.model.query();
     query = this.withIncludes(query, includes);
 
     return query.find(id);
   }
 
-  async getList() {
-    return this.model.query().fetch();
-  }
-
-  getByParentId(parentId, includes = []) {
+  async getByParentId(parentId, includes = []) {
     let query = this.model.query();
     query = this.withIncludes(query, includes);
     query.where("parent_id", parentId);
@@ -46,21 +46,20 @@ class CategoryService {
 
     // console.log("category", category);
     // console.log("categories", categories);
-    console.log("category create [category]", category);
   }
 
-  update(data) {
+  async update(data) {
     console.log("category update [data]", data);
   }
 
-  delete(id) {
+  async delete(id) {
     const category = this.findById(id);
     category.delete();
 
     console.log("category delete [id]", id);
   }
 
-  getCategoryTree() {}
+  async getTree() {}
 
   withIncludes(query, includes) {
     for (const name of includes) {

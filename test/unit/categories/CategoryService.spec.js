@@ -18,6 +18,7 @@ test("created", async ({ assert }) => {
     parentId,
   });
 
+  console.log("categories", categories);
   assert.equal(2 + 2, 4);
 });
 

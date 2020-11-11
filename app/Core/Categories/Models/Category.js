@@ -11,6 +11,14 @@ class Category extends QueryBuilder {
     super.boot();
   }
 
+  assertNodeExists() {
+    if (!this.left || !this.right) {
+      throw new Error("Node must exists.");
+    }
+
+    return this;
+  }
+
   /**
    * @method hasChildren
    * @return {boolean}
@@ -24,7 +32,7 @@ class Category extends QueryBuilder {
    * @return {Object}
    */
   children() {
-    return this.hasMany();
+    return this.hasMany("App/Core/Models/Category").query().whereRaw("left");
   }
 
   /**

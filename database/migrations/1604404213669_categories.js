@@ -9,9 +9,10 @@ class CategoriesSchema extends Schema {
       table.string("name").notNullable();
       table.string("slug").notNullable();
       table.integer("sort").nullable();
-      table.integer("lft").default(0);
-      table.integer("rgt").default(0);
-      table.integer("parent_id").nullable();
+      table.integer("left").notNullable();
+      table.integer("right").notNullable();
+      table.integer("level").default(0);
+      table.integer("parent_id").default(0);
       table.jsonb("attribute_data").nullable();
       table.timestamps();
     });
