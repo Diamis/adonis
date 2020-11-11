@@ -1,22 +1,51 @@
 "use script";
 
-const QueryBuilder = use("App/Core/Categories/QueryBuilder");
+const Model = use("Model");
+const Database = use("Database");
 
-class Category extends QueryBuilder {
+class Category extends Model {
   static get table() {
     return "categories";
   }
 
   static boot() {
     super.boot();
+
+    this.addHook("beforeCreate", this.actionBeforeCreate);
   }
 
-  assertNodeExists() {
-    if (!this.left || !this.right) {
-      throw new Error("Node must exists.");
+  static actionBeforeCreate = async (instance) => {
+    const { left, right, level } = await this.buildNested(instance);
+    const sql = Database.table(Category.table);
+
+    sql.where("left", ">", left).increment("left", 2);
+    sql.where("right", ">", right).increment("right", 2);
+
+    instance.left = left + 1;
+    instance.right = right + 1;
+    instance.level = level + 1;
+  };
+
+  static async buildNested(instance) {
+    let left = 0;
+    let right = 1;
+    let level = 0;
+
+    const { parent_id } = instance;
+    if (parent_id) {
+      const parent = await Category.find(parent_id);
+      if (parent) {
+        left = parent.left;
+        right = parent.right;
+        level = parent.level;
+      }
     }
 
-    return this;
+    return {
+      left,
+      right,
+      level,
+    };
   }
 
   /**
