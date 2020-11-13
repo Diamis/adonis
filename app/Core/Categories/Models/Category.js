@@ -14,35 +14,33 @@ class Category extends Model {
     this.addHook("beforeCreate", this.actionBeforeCreate);
   }
 
+  /**
+   * Nested sets
+   * @param {Category} instance
+   */
   static actionBeforeCreate = async (instance) => {
-    const { left, right, level } = await this.buildNested(instance);
-    const sql = Database.table(Category.table);
+    const { right, level } = await this.buildNested(instance);
 
-    sql.where("left", ">", left).increment("left", 2);
-    sql.where("right", ">", right).increment("right", 2);
+    await Category.query().where("left", ">", right).increment("left", 2);
+    await Category.query().where("right", ">=", right).increment("right", 2);
 
-    instance.left = left + 1;
+    instance.left = right;
     instance.right = right + 1;
-    instance.level = level + 1;
+    instance.level = level !== undefined ? level + 1 : 0;
   };
 
   static async buildNested(instance) {
-    let left = 0;
     let right = 1;
-    let level = 0;
+    let level;
 
     const { parent_id } = instance;
-    if (parent_id) {
-      const parent = await Category.find(parent_id);
-      if (parent) {
-        left = parent.left;
-        right = parent.right;
-        level = parent.level;
-      }
+    const parent = parent_id && (await Category.find(parent_id));
+    if (parent) {
+      right = parent.right;
+      level = parent.level;
     }
 
     return {
-      left,
       right,
       level,
     };

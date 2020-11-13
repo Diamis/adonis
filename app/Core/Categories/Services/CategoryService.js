@@ -7,8 +7,11 @@ const Category = use("App/Core/Categories/Models/Category");
 class CategoryService {
   constructor() {}
 
-  async getList() {
-    return await Category.query().fetch();
+  async getList(select = ["*"]) {
+    return await Category.query()
+      .select(select)
+      .orderBy("parent_id", "asc")
+      .fetch();
   }
 
   async findById(id, includes = []) {
@@ -40,9 +43,7 @@ class CategoryService {
       parentId,
     });
 
-    console.log("data", data);
     const category = await Category.create(data);
-    console.log("category", category);
   }
 
   async update(data) {
