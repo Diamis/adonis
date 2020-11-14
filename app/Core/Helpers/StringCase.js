@@ -16,8 +16,17 @@ const objectToSnakeCase = (data) => {
   }, {});
 };
 
+const objectToCamelCase = (data) => {
+  return Object.keys(data).reduce((prev, curr) => {
+    const key = snakeToCamelCase(curr);
+    prev[key] = data[curr];
+    return prev;
+  }, {});
+};
+
 module.exports = {
   camelToSnakeCase,
   snakeToCamelCase,
   objectToSnakeCase,
+  objectToCamelCase,
 };

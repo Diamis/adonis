@@ -1,7 +1,6 @@
 "use script";
 
 const Model = use("Model");
-const Database = use("Database");
 
 class Category extends Model {
   static get table() {
@@ -12,10 +11,11 @@ class Category extends Model {
     super.boot();
 
     this.addHook("beforeCreate", this.actionBeforeCreate);
+    this.addHook('afterDelete', this.actionAfterRemove);
   }
 
   /**
-   * Nested sets
+   * Nested sets create
    * @param {Category} instance
    */
   static actionBeforeCreate = async (instance) => {
@@ -28,6 +28,15 @@ class Category extends Model {
     instance.right = right + 1;
     instance.level = level !== undefined ? level + 1 : 0;
   };
+
+  /**
+   * Nested sets delete
+   * @param {Category} instance
+   */
+  static actionAfterDelete = async (instance) => {
+    console.log('remove');
+    console.log('instance', instance);
+  }
 
   static async buildNested(instance) {
     let right = 1;
@@ -56,19 +65,26 @@ class Category extends Model {
 
   /**
    * @method children
+   * @param {Array} select
+   *
    * @return {Object}
    */
-  children() {
-    return this.hasMany("App/Core/Models/Category").query().whereRaw("left");
+  children( select = ["*"]) {
+    return Category.query()
+      .select(...select)
+      .where('left', '>=', this.left)
+      .andWhere('right', '<=', this.right)
+      .orderBy('left', 'asc')
+      .fetch();
   }
 
   /**
    * @method children
    * @return {Object}
    */
-  parent() {
-    return this.belongsTo();
-  }
+  // parent() {
+    // return this.belongsTo();
+  // }
 }
 
 module.exports = Category;
