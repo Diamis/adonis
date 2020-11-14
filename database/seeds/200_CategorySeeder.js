@@ -10,11 +10,15 @@
 |
 */
 
-/** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
+const CategoryService = use("App/Core/Categories/Services/CategoryService");
+const { seedData } = require("../../test/data/categories");
+
 
 class CategorySeeder {
   async run () {
+    for(const ctg of seedData) {
+      await CategoryService.create(ctg);
+    }
   }
 }
 

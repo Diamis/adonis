@@ -1,6 +1,7 @@
 "use script";
 
 const Model = use("Model");
+const Database = use("Database");
 
 class Category extends Model {
   static get table() {
@@ -11,7 +12,8 @@ class Category extends Model {
     super.boot();
 
     this.addHook("beforeCreate", this.actionBeforeCreate);
-    this.addHook('afterDelete', this.actionAfterRemove);
+    this.addHook("beforeUpdate", this.actionBeforeUpdate);
+    this.addHook("afterDelete", this.actionAfterDelete);
   }
 
   /**
@@ -34,8 +36,30 @@ class Category extends Model {
    * @param {Category} instance
    */
   static actionAfterDelete = async (instance) => {
-    console.log('remove');
-    console.log('instance', instance);
+    const { left, right } = instance;
+    const width = right - left + 1; // вычисляем длину диапазона ключей удаляемого узла
+
+    // При наличии дочерних узлов удаляем их
+    if(width > 2) {
+      await Category.query().where('left', '>', left).where('right', '<', right).fetch();
+    }
+
+    // Обновляем ключи оставшихся веток
+    await Category.query().where('right', '>', right).update({
+      right: Database.raw(`?? - ${width}`, ['right']),
+      left: Database.raw(`CASE WHEN ?? > ${left} THEN ?? - ${width} ELSE ?? END`, ['left', 'left','left']),
+    });
+  }
+
+  /**
+   * Nested sets move to
+   * @param {Category} instance
+   * @returns {Promise<{level: *, right: number}>}
+   */
+  static actionBeforeUpdate = async (instance) => {
+    // if(instance.dirty.parent_uid) {
+    //
+    // }
   }
 
   static async buildNested(instance) {
@@ -73,7 +97,7 @@ class Category extends Model {
     return Category.query()
       .select(...select)
       .where('left', '>=', this.left)
-      .andWhere('right', '<=', this.right)
+      .where('right', '<=', this.right)
       .orderBy('left', 'asc')
       .fetch();
   }

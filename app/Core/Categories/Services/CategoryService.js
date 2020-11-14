@@ -13,7 +13,7 @@ class CategoryService {
    * @param {Array} select
    * @returns {Promise<Response>}
    */
-  async getList(select = ["*"]) {
+  static async getList(select = ["*"]) {
     const category = await Category.query()
                                    .select(...select)
                                    .orderBy('parent_id', 'asc')
@@ -32,7 +32,7 @@ class CategoryService {
    *
    * @returns {Array} tree
    */
-  async getTree(param = {}) {
+  static async getTree(param = {}) {
     const { id = null, select = ['*'] } = param;
     let tree = [];
     let model;
@@ -45,7 +45,7 @@ class CategoryService {
     if(model) {
       tree = (await model.children(buildSelect)).toJSON();
     } else {
-      tree = await this.getList(buildSelect);
+      tree = await CategoryService.getList(buildSelect);
     }
 
     return utils.reduceTree(tree);
@@ -57,11 +57,20 @@ class CategoryService {
    * @param {Number} id
    * @returns {Promise<Model|Null>}
    */
-  async findById(id) {
-    return Category.find(id);
+  static async findById(id) {
+    if(!id) {
+      throw new Error("Property id of undefined");
+    }
+
+    const model = await Category.find(id);
+    if(!model) {
+      throw new Error(`Category with id=${id} property not found`)
+    }
+
+    return model;
   }
 
-  async create(params) {
+  static async create(params) {
     let { slug, name, sort = 0, parentId } = params;
 
     if (!slug && name) {
@@ -80,8 +89,9 @@ class CategoryService {
     console.log("category update [data]", data);
   }
 
-  async delete(id) {
-    console.log("category delete [id]", id);
+  static async delete(id) {
+    const model = await CategoryService.findById(id);
+    return model.delete();
   }
 }
 
