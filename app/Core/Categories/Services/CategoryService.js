@@ -34,7 +34,7 @@ class CategoryService {
    */
   static async getTree(param = {}) {
     const { id = null, select = ['*'] } = param;
-    let tree = [];
+    let data = [];
     let model;
 
     const buildSelect = ['id', 'parent_id', ...select];
@@ -43,12 +43,12 @@ class CategoryService {
     }
 
     if(model) {
-      tree = (await model.children(buildSelect)).toJSON();
+      data = (await model.children(buildSelect)).toJSON();
     } else {
-      tree = await CategoryService.getList(buildSelect);
+      data = await CategoryService.getList(buildSelect);
     }
 
-    return utils.reduceTree(tree);
+    return utils.arrayToTree(data);
   }
 
   /**
@@ -77,6 +77,10 @@ class CategoryService {
       slug = Translate.toLatin(name);
     }
 
+    if(parentId) {
+      await CategoryService.findById(parentId);
+    }
+
     return Category.create(objectToSnakeCase({
       name,
       slug,
@@ -85,6 +89,7 @@ class CategoryService {
     }));
   }
 
+  // TODO Реализовать перемещения катерогии Nested sets
   async update(data) {
     console.log("category update [data]", data);
   }

@@ -41,7 +41,7 @@ class Category extends Model {
 
     // При наличии дочерних узлов удаляем их
     if(width > 2) {
-      await Category.query().where('left', '>', left).where('right', '<', right).fetch();
+      await Category.query().where('left', '>', left).where('right', '<', right).delete();
     }
 
     // Обновляем ключи оставшихся веток
@@ -71,6 +71,9 @@ class Category extends Model {
     if (parent) {
       right = parent.right;
       level = parent.level;
+    } else {
+      const max = await Category.query().getMax('right');
+      right = max || right;
     }
 
     return {
@@ -106,9 +109,14 @@ class Category extends Model {
    * @method children
    * @return {Object}
    */
-  // parent() {
-    // return this.belongsTo();
-  // }
+  parents(select = ["*"]) {
+    return Category.query()
+      .select(...select)
+      .where('left', '<=', this.left)
+      .where('right', '>=', this.right)
+      .orderBy('left', 'asc')
+      .fetch();
+  }
 }
 
 module.exports = Category;

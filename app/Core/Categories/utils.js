@@ -3,11 +3,16 @@
  * @param {Array} items
  * @return {object}
  */
-const reduceTree = (items = []) => {
+const arrayToTree = (items = []) => {
+  if (!Array.isArray(items)) {
+    throw new TypeError('Expected an array but got an invalid argument');
+  }
+
   let tree = [];
   let node = {};
 
-  items.forEach(item => node[item.id] = Object.assign(item, { children: [] }));
+  items.forEach(item => node[item.id] = { ...item, children: [] });
+
   Object.values(node).forEach(({ id, parent_id }) => {
     if(parent_id in node) {
       node[parent_id].children.push(node[id]);
@@ -16,13 +21,8 @@ const reduceTree = (items = []) => {
     }
   });
 
-  const res = [...tree];
-
-  tree = null;
-  node = null;
-
-  return res;
+  return tree;
 }
 
 
-module.exports = { reduceTree }
+module.exports = { arrayToTree }
