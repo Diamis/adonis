@@ -4,7 +4,7 @@ const Product = use("App/Core/Products/Models/Product");
 
 class ProductService {
   constructor() {
-    this.model = new Product;
+    this.model = new Product();
   }
 
   async create(params) {

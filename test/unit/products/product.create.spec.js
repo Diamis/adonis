@@ -1,7 +1,7 @@
 "use strict";
 
 const { test, trait } = use("Test/Suite")("Product Created");
-const ProductService = use("App/Core/Products/Services/ProductService");
+const ProductService  = use("App/Core/Products/Services/ProductService");
 
 trait("DatabaseTransactions");
 
@@ -11,6 +11,4 @@ test("append properties of name and description", async() => {
     name: 'product_name', 
     description: 'product description'
   });
-
-  console.log(product);
 })
