@@ -8,6 +8,7 @@ class ProductsSchema extends Schema {
       table.increments();
       table.string("name").notNullable();
       table.string("slug").notNullable();
+      table.text('description').nullable();
       table.integer("sort").nullable();
       table.jsonb("attribute_data").nullable();
       table.jsonb("option_data").nullable();
