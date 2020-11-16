@@ -59,11 +59,7 @@ class Category extends Model {
   static actionBeforeUpdate = async (instance) => {
     if(instance.dirty.parent_id) {
       throw new Error("Property parent_id cannot be changed");
-    }
-
-    if(instance.dirty.attribute_data) {
-      instance.attribute_data = JSON.stringify(instance.dirty.attribute_data);
-    }
+    } 
   }
 
   static async buildNested(instance) {
