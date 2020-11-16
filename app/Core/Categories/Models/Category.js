@@ -59,7 +59,7 @@ class Category extends Model {
   static actionBeforeUpdate = async (instance) => {
     if(instance.dirty.parent_id) {
       throw new Error("Property parent_id cannot be changed");
-    } 
+    }
   }
 
   static async buildNested(instance) {
@@ -116,6 +116,10 @@ class Category extends Model {
       .where('right', '>=', this.right)
       .orderBy('left', 'asc')
       .fetch();
+  }
+
+  products () {
+    return this.hasMany('App/Core/Products/Models/Product');
   }
 }
 

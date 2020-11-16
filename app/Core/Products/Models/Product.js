@@ -26,6 +26,14 @@ class Product extends Model {
   static async actionBeforeUpdate(instance){}
 
   static async actionAfterDelete(){}
+
+  variants () {
+    return this.hasMany('App/Core/Products/Models/ProductVariant');
+  }
+
+  categories () {
+    return this.hasMany('App/Core/Categories/Models/Category');
+  }
 }
 
-module.extends = Product;
+module.exports = Product;
