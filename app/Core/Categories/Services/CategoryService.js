@@ -15,10 +15,10 @@ class CategoryService {
    */
   static async getList(select = ["*"]) {
     const category = await Category.query()
-                                   .select(...select)
-                                   .orderBy('parent_id', 'asc')
-                                   .orderBy('id', 'asc')
-                                   .fetch();
+      .select(...select)
+      .orderBy("parent_id", "asc")
+      .orderBy("id", "asc")
+      .fetch();
 
     return category ? category.toJSON() : [];
   }
@@ -33,16 +33,16 @@ class CategoryService {
    * @returns {Array} tree
    */
   static async getTree(param = {}) {
-    const { id = null, select = ['*'] } = param;
+    const { id = null, select = ["*"] } = param;
     let data = [];
     let model;
 
-    const buildSelect = ['id', 'parent_id', ...select];
-    if(id) {
+    const buildSelect = ["id", "parent_id", ...select];
+    if (id) {
       model = await Category.find(id);
     }
 
-    if(model) {
+    if (model) {
       data = (await model.children(buildSelect)).toJSON();
     } else {
       data = await CategoryService.getList(buildSelect);
@@ -55,38 +55,43 @@ class CategoryService {
    * Получает модель
    * @method findById
    * @param {Number} id
+   * @param {Object|undefined} param
    * @returns {Promise<Model|Null>}
    */
-  static async findById(id) {
-    if(!id) {
+  static async findById(id, param = {}) {
+    if (!id) {
       throw new Error("Property id of undefined");
     }
 
-    const model = await Category.find(id);
-    if(!model) {
-      throw new Error(`Category with id=${id} property not found`)
+    const { select = ['*'] } = param;
+    const model = await Category.query().select(...select).where('id', id).first();
+    if (!model) {
+      throw new Error(`Category with id=${id} property not found`);
     }
 
     return model;
   }
 
   static async create(params) {
-    let { slug, name, sort = 0, parentId } = params;
+    let { slug, name, sort = 0, parentId, data, attributeData } = params;
 
     if (!slug && name) {
       slug = Translate.toLatin(name);
     }
 
-    if(parentId) {
+    if (parentId) {
       await CategoryService.findById(parentId);
     }
 
-    return Category.create(objectToSnakeCase({
-      name,
-      slug,
-      sort,
-      parentId,
-    }));
+    return Category.create(
+      objectToSnakeCase({
+        name,
+        slug,
+        sort,
+        parentId,
+        attributeData: attributeData || data,
+      })
+    );
   }
 
   // TODO Реализовать перемещения катерогии Nested sets
