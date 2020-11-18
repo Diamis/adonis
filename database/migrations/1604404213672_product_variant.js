@@ -6,10 +6,10 @@ class ProductVariant extends Schema {
   up () {
     this.create('product_variants', (table) => {
       table.increments()
-      table.insert("product_id").unsigned().references("id").inTable("products");
+      table.integer("product_id").unsigned().references("id").inTable("products");
       table.decimal("price", 10, 2).unsigned();
-      table.insert("min_qty").nullable();
-      table.insert("unit_qty").nullable();
+      table.integer("min_qty").nullable();
+      table.integer("unit_qty").nullable();
       table.jsonb("options").nullable();
       table.timestamps()
     })

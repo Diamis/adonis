@@ -6,22 +6,42 @@ const ProductVariant = use("App/Core/Products/Models/ProductVariant");
 class ProductVariantService {
   /**
    * Creates variants for a product
+   * 
+   * @param {Number} id 
+   * @param {Array<Object>} variants
+   * @returns App/Core/Products/Models/Product
+   */
+  async insert(id, variants) {
+    const product = await Product.find(id);
+    const data = [];
+
+    for(const variant of variants) {
+      const params = this.validate(variant); 
+      data.push(params);
+    }
+
+    await product.variants().insert(data);
+    await product.load('variants');
+
+    return product;
+  }
+
+  /**
+   * Creates variant for a product
    *
    * @param {Number} id
    * @param {Object} data
    * @returns App/Core/Products/Models/Product
    */
   async create(id, data) {
-    const { price, min_qty, unit_qty } = data;
+    const params = this.validate(data);
     const product = await Product.find(id);
 
-    await product.variants().create({
-      price,
-      min_qty,
-      unit_qty
-    });
+    await product.variants().create(params);
 
-    return product.load('variants');
+    await product.load('variants');
+ 
+    return product;
   }
 
   /**
@@ -50,6 +70,15 @@ class ProductVariantService {
   async delete(id) {
     const variant = await ProductVariant.find(id);
     return variant.delete();
+  }
+
+  validate(data) {
+    const { price, min_qty, unit_qty } = data;
+    return {
+      price, 
+      min_qty, 
+      unit_qty
+    }
   }
 }
 

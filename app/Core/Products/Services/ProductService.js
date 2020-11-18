@@ -5,7 +5,8 @@ const ProductVariantService = use("App/Core/Products/Services/ProductVariantServ
 
 class ProductService {
   constructor() {
-    this.model = new Product();
+    this.model = new Product;
+    this.variant = new ProductVariantService;
   }
 
   /**
@@ -36,16 +37,14 @@ class ProductService {
     }
 
     const product = await Product.create(sqlData);
-    const variant = new ProductVariantService();
-
-    await variant.createVariant(product, {
+    const productVariants = await this.createVariant(product, {
       price,
       attribute_data,
       min_qty: minQty,
       unit_qty: unitQty
     });
 
-    return product;
+    return productVariants;
   }
 
   /**
@@ -56,7 +55,8 @@ class ProductService {
    * @returns {Promise<Product>}
    */
   async createVariant(product, data) {
-    return this.variant.create(product, data);
+    Product.instanceof(product);
+    return this.variant.create(product.id, data);
   }
 
   // getters and setters

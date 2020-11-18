@@ -15,8 +15,14 @@ class ProductVariant extends Model {
   static async actionBeforeUpdate(instance){}
   static async actionAfterDelete(){}
 
+  static instanceof(instatce) {
+    if(!(instatce instanceof ProductVariant)) {
+      throw new Error('Parameter must be subclass ProductVariant');
+    }
+  }
+
   product () {
-    return this.hasOne('App/Core/Products/Models/Product')
+    return this.hasOne('App/Core/Products/Models/Product', 'product_id', 'id')
   }
 }
 

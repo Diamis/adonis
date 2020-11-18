@@ -9,9 +9,11 @@ test("append properties of name and description", async ({ assert }) => {
   const service = new ProductService();
   const product = await service.create({
     name: 'product_name',
-    description: 'product description'
+    description: 'product description',
+    price: 100500
   });
 
-  console.log('product', product)
+  const json = product.toJSON();
+  console.log('product', json)
 
-}).timeout(0);
+});

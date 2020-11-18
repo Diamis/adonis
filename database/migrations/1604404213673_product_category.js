@@ -5,10 +5,10 @@ const Schema = use('Schema')
 class ProductCategory extends Schema {
   up () {
     this.create('product_categories', (table) => {
-      table.insert("product_id").unsigned();
+      table.integer("product_id").unsigned();
       table.foreign("product_id").references("id").inTable("products");
 
-      table.insert("category_id").unsigned();
+      table.integer("category_id").unsigned();
       table.foreign("category_id").references("id").inTable("categories");
     })
   }

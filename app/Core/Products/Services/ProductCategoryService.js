@@ -4,16 +4,15 @@ const Product = use("App/Core/Products/Models/Product");
 
 class ProductCategoryService {
   constructor(product) {
-    if(!(product instanceof Product)) {
-      throw new Error('error');
-    }
-
+    Product.instanceof(product);
     this.product = product
   }
 
   async attach() { console.log('ProductCategoryService.attach'); }
   async update() { console.log('ProductCategoryService.update'); }
   async delete() { console.log('ProductCategoryService.delete'); }
+
+  // getters and setters
 
   set product(value) {
     this._product = value;

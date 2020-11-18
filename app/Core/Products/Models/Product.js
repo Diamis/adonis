@@ -27,12 +27,18 @@ class Product extends Model {
 
   static async actionAfterDelete(){}
 
+  static instanceof(instatce) {
+    if(!(instatce instanceof Product)) {
+      throw new Error('Parameter must be subclass Product');
+    }
+  }
+
   variants () {
-    return this.hasMany('App/Core/Products/Models/ProductVariant');
+    return this.hasMany('App/Core/Products/Models/ProductVariant', 'id', 'product_id');
   }
 
   categories () {
-    return this.hasMany('App/Core/Categories/Models/Category');
+    return this.hasMany('App/Core/Categories/Models/Category', 'id', 'category_id');
   }
 }
 
