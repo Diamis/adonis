@@ -13,7 +13,13 @@
 |
 */
 
-/** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
 Route.on('/').render('welcome')
+
+/*
+* REST API Routes
+*/
+require('./routes/assets');
+require('./routes/products');
+require('./routes/categories');

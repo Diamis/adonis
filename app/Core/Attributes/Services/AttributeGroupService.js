@@ -2,4 +2,4 @@
 
 class AttributeGroupService {}
 
-module.extends = AttributeGroupService;
+module.exports = AttributeGroupService;

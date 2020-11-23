@@ -1,6 +1,6 @@
 "use script";
  
-const BaseDrive = require('./BaseDriver');
+const BaseDrive = use('App/Core/Assets/Drivers/BaseDriver');
 
 class YouTube extends BaseDrive {
   static get handle() {
@@ -12,4 +12,4 @@ class YouTube extends BaseDrive {
   }
 }
 
-module.extends = YouTube;
+module.exports = YouTube;

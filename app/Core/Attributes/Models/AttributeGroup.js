@@ -4,4 +4,4 @@ const Model = use("Model");
 
 class AttributeGroup extends Model {}
 
-module.extends = AttributeGroup;
+module.exports = AttributeGroup;

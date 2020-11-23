@@ -2,4 +2,4 @@
 
 class AttributeService {}
 
-module.extends = AttributeService;
+module.exports = AttributeService;

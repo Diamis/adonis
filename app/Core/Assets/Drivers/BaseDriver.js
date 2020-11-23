@@ -9,4 +9,4 @@ class BaseDriver {
   async prepare() {};
 }
 
-module.extends = BaseDriver;
+module.exports =BaseDriver;

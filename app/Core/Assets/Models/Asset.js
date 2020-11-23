@@ -16,4 +16,4 @@ class Asset extends Model {
   }
 }
 
-module.extends = Asset;
+module.exports = Asset;

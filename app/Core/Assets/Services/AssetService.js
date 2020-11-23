@@ -53,4 +53,4 @@ class AssetService {
   }
 }
 
-module.extends = AssetService;
+module.exports = AssetService;

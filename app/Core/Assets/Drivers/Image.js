@@ -1,7 +1,6 @@
 "use script";
 
-const BaseDrive = require('./BaseDriver');
-
+const BaseDrive = use('App/Core/Assets/Drivers/BaseDriver');
 class Image extends BaseDrive {
   static get handle() {
     return 'image';
@@ -12,4 +11,4 @@ class Image extends BaseDrive {
   }
 }
 
-module.extends = Image;
+module.exports = Image;

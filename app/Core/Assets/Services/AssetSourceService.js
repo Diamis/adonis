@@ -2,4 +2,4 @@
  
 class AssetSourceService {}
 
-module.extends = AssetSourceService;
+module.exports = AssetSourceService;
