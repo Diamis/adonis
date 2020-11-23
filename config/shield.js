@@ -1,4 +1,6 @@
-'use strict'
+'use strict';
+
+const Env = use('Env');
 
 module.exports = {
   /*
@@ -132,7 +134,7 @@ module.exports = {
   |
   */
   csrf: {
-    enable: true,
+    enable: Env.get('NODE_ENV', 'production') === 'testing' ? false : true,
     methods: ['POST', 'PUT', 'DELETE'],
     filterUris: [],
     cookieOptions: {

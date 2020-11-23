@@ -7,7 +7,7 @@ class AssetSource extends Schema {
     this.create('asset_sources', (table) => {
       table.increments()
       table.string('name')
-      table.string('handle').unigue();
+      table.string('handle').unique();
       table.string('disk');
       table.boolean('default').default(false);
       table.string('path').nullable();

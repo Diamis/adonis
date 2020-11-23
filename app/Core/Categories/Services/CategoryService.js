@@ -1,7 +1,6 @@
 "use script";
 
 const utils = use("App/Core/Categories/utils");
-const Translate = use("App/Core/Helpers/Translate");
 const Category = use("App/Core/Categories/Models/Category");
 const { objectToSnakeCase } = use("App/Core/Helpers/StringCase");
 
@@ -74,10 +73,6 @@ class CategoryService {
 
   static async create(params) {
     let { slug, name, sort = 0, parentId, data, attributeData } = params;
-
-    if (!slug && name) {
-      slug = Translate.toLatin(name);
-    }
 
     if (parentId) {
       await CategoryService.findById(parentId);

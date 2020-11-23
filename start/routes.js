@@ -20,6 +20,8 @@ Route.on('/').render('welcome')
 /*
 * REST API Routes
 */
-require('./routes/assets');
-require('./routes/products');
-require('./routes/categories');
+Route.group(() => {
+  require('./routes/assets');
+  require('./routes/products');
+  require('./routes/categories');
+}).prefix('api');

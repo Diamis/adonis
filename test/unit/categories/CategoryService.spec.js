@@ -8,7 +8,6 @@ const {
   seedData,
   seedTree,
   seedTreeDelete,
-  seedTreeUpdate,
 } = require("../../data/categories");
 
 trait("DatabaseTransactions");

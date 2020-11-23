@@ -7,7 +7,7 @@ class Assets extends Schema {
     this.create('assets', (table) => {
       table.increments()
       table.integer('asset_source_id').unsigned().nullable();
-      table.foreign('asset_source_id').references('id').inTable('asset_source');
+      table.foreign('asset_source_id').references('id').inTable('asset_sources');
       table.string('filename').nullable().unique();
       table.string('original_filename').nullable();
       table.string('extension').nullable();

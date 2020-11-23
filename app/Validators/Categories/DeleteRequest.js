@@ -1,10 +1,14 @@
 'use strict'
 
 class CategoriesDeleteRequest {
-  async authorize () {
-    return true;
+  get validateAll () {
+    return true
   }
-  
+
+  get formatter () {
+    return formatters.JsonApi
+  }
+
   get rules () {
     return {
       // validation rules
