@@ -3,8 +3,8 @@
 const Route = use('Route');
 
 Route.post('categories', 'Categories/CategoryMutateController.store').validator('Categories/CreateRequest');
-Route.put('categories/{categoryId}', 'Categories/CategoryMutateController.update').validator('Categories/UpdateRequest');
-Route.delete('categories/{categoryId}', 'Categories/CategoryMutateController.delete').validator('Categories/DeleteRequest');
+Route.put('categories/:categoryId', 'Categories/CategoryMutateController.update').validator('Categories/UpdateRequest');
+Route.delete('categories/:categoryId', 'Categories/CategoryMutateController.delete').validator('Categories/DeleteRequest');
 
 Route.get('categories', 'Categories.CategoryController.index');
 Route.get('categories/{categoryId}', 'Categories.CategoryController.index');

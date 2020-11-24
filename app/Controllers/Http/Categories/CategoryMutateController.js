@@ -8,14 +8,15 @@ class CategoryMutateController {
     return response.status(200).send(category);
   }
 
-  async update() {
-    return 'update';
+  async update({ request, response }) {
+    console.log('request', request)
+    return response.status(200).send('update');
   }
 
-  async delete() {
-    return 'delete';
+  async delete({ params: { categoryId }, response }) {
+    await CategoryService.delete(categoryId);
+    return response.status(204).send();
   }
-
 }
 
 module.exports = CategoryMutateController

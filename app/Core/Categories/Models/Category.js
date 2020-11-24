@@ -22,7 +22,7 @@ class Category extends Model {
    */
   static actionBeforeCreate = async (instance) => {
     const { right, level } = await this.buildNested(instance);
-
+ 
     await Category.query().where("left", ">", right).increment("left", 2);
     await Category.query().where("right", ">=", right).increment("right", 2);
 
@@ -63,7 +63,7 @@ class Category extends Model {
   }
 
   static async buildNested(instance) {
-    let right = 1;
+    let right = 2;
     let level;
 
     const { parent_id } = instance;
@@ -72,8 +72,10 @@ class Category extends Model {
       right = parent.right;
       level = parent.level;
     } else {
-      const max = await Category.query().getMax('right');
-      right = max || right;
+      let count = await Category.query().getCount();
+
+      count = parseInt(count) + 1;
+      right = count * 2 || right;
     }
 
     return {

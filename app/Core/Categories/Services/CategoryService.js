@@ -1,5 +1,6 @@
 "use script";
 
+const { sanitizor } = use('Validator')
 const utils = use("App/Core/Categories/utils");
 const Category = use("App/Core/Categories/Models/Category");
 const { objectToSnakeCase } = use("App/Core/Helpers/StringCase");
@@ -65,20 +66,24 @@ class CategoryService {
     const { select = ['*'] } = param;
     const model = await Category.query().select(...select).where('id', id).first();
     if (!model) {
-      throw new Error(`Category with id=${id} property not found`);
+      throw new Error(`В таблице "categories" строка с ключем ${id} не найдена`);
     }
 
     return model;
   }
 
   static async create(params) {
-    let { slug, name, sort = 0, parentId, data, attributeData } = params;
+    let { slug, name, sort = 0, parentId = 0, data, children, attributeData } = params;
+
+    if(!slug && name) {
+      slug = sanitizor.slug(name);
+    }
 
     if (parentId) {
       await CategoryService.findById(parentId);
     }
 
-    return Category.create(
+    const category = await Category.create(
       objectToSnakeCase({
         name,
         slug,
@@ -87,6 +92,27 @@ class CategoryService {
         attributeData: attributeData || data,
       })
     );
+
+    if(children) {
+      await CategoryService.createChildren(category.id, children)
+      return CategoryService.findById(category.id);
+    }
+
+    return category;
+  }
+
+  static async createChildren(parentId, params) {
+    if(!parentId){
+      throw new Error('Для добавления дочерней категории укажите parentId');
+    }
+
+    if(!Array.isArray(params)) {
+      throw new Error('Параметры должны передоваться в массиве');
+    }
+
+    for(const param of params) {
+      await CategoryService.create({ ...param, parentId });
+    }
   }
 
   // TODO Реализовать перемещения катерогии Nested sets

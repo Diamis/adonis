@@ -10,9 +10,7 @@ class CategoriesDeleteRequest {
   }
 
   get rules () {
-    return {
-      // validation rules
-    }
+    return {}
   }
 }
 
