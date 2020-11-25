@@ -1,4 +1,6 @@
-'use strict'
+'use strict';
+
+const { formatters  } = use('Validator');
 
 class CategoriesUpdateRequest {
   get validateAll () {
@@ -11,9 +13,11 @@ class CategoriesUpdateRequest {
 
   get rules () {
     return {
-      // validation rules
+      parent_id: 'integer',
+      name: 'string',
+      slug: 'string'
     }
-  }
+  } 
 }
 
 module.exports = CategoriesUpdateRequest

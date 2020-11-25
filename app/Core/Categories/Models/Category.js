@@ -21,7 +21,7 @@ class Category extends Model {
    * @param {Category} instance
    */
   static actionBeforeCreate = async (instance) => {
-    const { right, level } = await this.buildNested(instance);
+    const { right, level } = await Category.buildNested(instance);
  
     await Category.query().where("left", ">", right).increment("left", 2);
     await Category.query().where("right", ">=", right).increment("right", 2);
@@ -51,14 +51,41 @@ class Category extends Model {
     });
   }
 
-  /**
+  /** 
    * Nested sets move to
    * @param {Category} instance
    * @returns {Promise<{level: *, right: number}>}
    */
-  static actionBeforeUpdate = async (instance) => {
+  static actionBeforeUpdate = async (instance) => { 
+    // TODO: реализовать корректное перемещение узла
     if(instance.dirty.parent_id) {
-      throw new Error("Property parent_id cannot be changed");
+      const width = instance.right - instance.left + 1;
+      
+      // step 1: узел и дочерние элементы делает отрицательными
+      await Category.query().where('left', '>=', instance.left).where('right', '<=', instance.right).update({
+        left: Database.raw('?? * (-1)', ['left']),
+        right: Database.raw('?? * (-1)', ['right'])
+      });
+
+      // step 2: смещаем узлы
+      await Category.query().where('left', '>', instance.right).update({
+        left: Database.raw(`?? - ${width}`, ['left']),
+        right: Database.raw(`?? - ${width}`, ['right'])
+      });
+
+      // step 3: получаем значения родителя и увеличиваем значение узла
+      const { right, parent } = await Category.buildNested(instance);
+      if(parent) {
+        parent.right = parent.right + width;
+        await parent.save();
+      }
+
+      // step 4: выстраиваем новые для узла
+      const newWidth = right - instance.right - 1 + width;
+      await Category.query().where('left', '<=', 0-instance.left).where('right', '>=', 0-instance.right).update({
+        left: Database.raw(`?? * (-1) + ${newWidth}`, ['left']),
+        right: Database.raw(`?? * (-1) + ${newWidth}`, ['right'])
+      });
     }
   }
 
@@ -81,6 +108,7 @@ class Category extends Model {
     return {
       right,
       level,
+      parent
     };
   }
 

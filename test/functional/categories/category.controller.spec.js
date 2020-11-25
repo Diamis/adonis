@@ -29,7 +29,7 @@ test('add validation check', async ({ client }) => {
     right: 3,
     level: 0
   });
-
+  
   // add categories with children
   data = {
     name: 'root children',
@@ -78,4 +78,8 @@ test('delete validation check', async ({ client }) => {
   response.assertStatus(500);
 });
 
-test('update validation check', async ({ client }) => {});
+test('update validation check', async ({ client }) => {
+  const data = { parent_id: 1 };
+  const response = await client.put(`/api/categories/5`).type('json').accept('json').send(data).end();
+  response.assertStatus(200);
+});
