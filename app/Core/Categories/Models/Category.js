@@ -59,7 +59,6 @@ class Category extends Model {
    * @returns {Promise<{level: *, right: number}>}
    */
   static actionBeforeUpdate = async (instance) => { 
-    // TODO: реализовать корректное перемещение узла
     if(instance.dirty.parent_id) {
       const width = instance.right - instance.left + 1;
       
