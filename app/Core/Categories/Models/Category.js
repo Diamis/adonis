@@ -1,5 +1,7 @@
 "use script";
 
+const { internet } = require("faker");
+
 const Model = use("Model");
 const Database = use("Database");
 
@@ -68,34 +70,36 @@ class Category extends Model {
       });
 
       // step 2: смещаем узлы
-      await Category.query().where('left', '>', instance.right).update({
-        left: Database.raw(`?? - ${width}`, ['left']),
+      await Category.query().where('right', '>=', instance.right).update({
+        left: Database.raw(`CASE WHEN ?? > ${instance.right} THEN ?? - ${width} ELSE ?? END`, ['left', 'left', 'left']),
         right: Database.raw(`?? - ${width}`, ['right'])
       });
 
-      // step 3: получаем значения родителя и увеличиваем значение узла
-      const { right, parent } = await Category.buildNested(instance);
-      if(parent) {
-        parent.right = parent.right + width;
-        await parent.save();
-      }
+      // step 3: получаем значения родителя и выдиляем место под перемещаемый узел
+      const { right, level } = await Category.buildNested(instance);
+      await Category.query().where('right', '>=', right).update({
+        left: Database.raw(`CASE WHEN ?? > ${right} THEN ?? + ${width} ELSE ?? END`, ['left', 'left', 'left']),
+        right: Database.raw(`?? + ${width}`, ['right'])
+      });
 
-      // step 4: выстраиваем новые для узла
-      const newWidth = right - instance.right - 1 + width;
-      await Category.query().where('left', '<=', 0-instance.left).where('right', '>=', 0-instance.right).update({
-        left: Database.raw(`?? * (-1) + ${newWidth}`, ['left']),
-        right: Database.raw(`?? * (-1) + ${newWidth}`, ['right'])
+      // step 4: отрицательные значения заменяем положительными
+      await Category.query().where('left', '<', 0).where('right', '<', 0).update({
+        left: Database.raw(`0 - ?? - ${instance.left} + ${right}`, ['left']),
+        right: Database.raw(`0 - ?? - ${instance.left} + ${right}`, ['right']),
+        level: Database.raw(`?? - ${instance.level} + ${level} + 1`, ['level'])
       });
     }
   }
 
   static async buildNested(instance) {
+    let left = 1;
     let right = 2;
     let level;
 
     const { parent_id } = instance;
     const parent = parent_id && (await Category.find(parent_id));
     if (parent) {
+      left = parent.left;
       right = parent.right;
       level = parent.level;
     } else {
@@ -106,6 +110,7 @@ class Category extends Model {
     }
 
     return {
+      left,
       right,
       level,
       parent
