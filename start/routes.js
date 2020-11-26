@@ -24,4 +24,5 @@ Route.group(() => {
   require('./routes/assets');
   require('./routes/products');
   require('./routes/categories');
+  require('./routes/attributes');
 }).prefix('api');

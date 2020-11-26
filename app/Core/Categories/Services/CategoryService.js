@@ -1,7 +1,8 @@
 "use script";
 
-const { sanitizor } = use('Validator')
-const utils = use("App/Core/Categories/utils");
+const { sanitizor } = use('Validator');
+
+const getTree = use("App/Core/Helpers/Tree");
 const Category = use("App/Core/Categories/Models/Category");
 const { objectToSnakeCase } = use("App/Core/Helpers/StringCase");
 
@@ -43,12 +44,12 @@ class CategoryService {
     }
 
     if (model) {
-      data = (await model.children(buildSelect)).toJSON();
+      data = (await model.nestedChildren(buildSelect)).toJSON();
     } else {
       data = await CategoryService.getList(buildSelect);
     }
 
-    return utils.arrayToTree(data);
+    return getTree(data);
   }
 
   /**
@@ -113,11 +114,6 @@ class CategoryService {
     for(const param of params) {
       await CategoryService.create({ ...param, parentId });
     }
-  }
-
-  // TODO Реализовать перемещения катерогии Nested sets
-  async update(data) {
-    console.log("category update [data]", data);
   }
 
   static async delete(id) {

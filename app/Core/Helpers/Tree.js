@@ -1,9 +1,6 @@
-/**
- * Преобразует массив во воложенный объект
- * @param {Array} items
- * @return {object}
- */
-const arrayToTree = (items = []) => {
+'use script';
+
+module.exports = (items = []) => {
   if (!Array.isArray(items)) {
     throw new TypeError('Expected an array but got an invalid argument');
   }
@@ -23,6 +20,3 @@ const arrayToTree = (items = []) => {
 
   return tree;
 }
-
-
-module.exports = { arrayToTree }

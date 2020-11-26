@@ -20,7 +20,7 @@ test('add validation check', async ({ client }) => {
   // add category
   data = { name: 'Категория Cyrillic' };
   response = await client.post('/api/categories').type('json').accept('json').send(data).end();
-  response.assertStatus(200);
+  response.assertStatus(201);
   response.assertJSON({
     ...response.body,
     ...data,
@@ -29,7 +29,7 @@ test('add validation check', async ({ client }) => {
     right: 3,
     level: 0
   });
-  
+
   // add categories with children
   data = {
     name: 'root children',
@@ -46,7 +46,7 @@ test('add validation check', async ({ client }) => {
     ]
   };
   response = await client.post('/api/categories').type('json').accept('json').send(data).end();
-  response.assertStatus(200);
+  response.assertStatus(201);
   response.assertJSON({
     ...response.body,
     name: 'root children',

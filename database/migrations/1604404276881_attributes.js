@@ -1,6 +1,7 @@
 "use strict";
 
 const Schema = use("Schema");
+const Attribute = use("App/Core/Attributes/Models/Attribute");
 
 class AttributesSchema extends Schema {
   up() {
@@ -8,20 +9,8 @@ class AttributesSchema extends Schema {
       table.increments();
       table.string("name");
       table.integer("sort");
-      table.boolean("required");
-      table
-        .enum("type", [
-          "text",
-          "textarea",
-          "select",
-          "redio",
-          "checkbox",
-          "date",
-          "time",
-          "switch",
-          "number",
-        ])
-        .default("text");
+      table.boolean("required").default(false);
+      table.enum("type", Attribute.types).default("text");
       table.timestamps();
     });
   }
