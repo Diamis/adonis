@@ -20,6 +20,10 @@ test('add validation check', async ({ client }) => {
  
   response = await client.post('/api/attributes').type('json').accept('json').send(data).end();
   response.assertStatus(201);
+
+  data = { name: 'two attribute', defaultValue: 'default string' }
+  response = await client.post('/api/attributes').type('json').accept('json').send(data).end();
+  response.assertStatus(201);
 });
 
 test('update validation check', async ({ client }) => {
