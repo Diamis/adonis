@@ -30,12 +30,17 @@ class Category extends Model {
   /**
    * @method parent
    */
-  parent(select = ["*"]) {
+  parent() {
     return this.hasMany('App/Core/Categories/Models/Category', 'parent_id', 'id');
   }
 
-  products () {
+  products() {
     return this.hasMany('App/Core/Products/Models/Product');
+  }
+
+  attributes() {
+    return this.belongsToMany('App/Core/Attributes/Models/Attribute')
+      .pivotTable('category_attributes');
   }
 }
 

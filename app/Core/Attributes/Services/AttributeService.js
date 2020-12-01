@@ -25,13 +25,14 @@ class AttributeService {
    * @return {Promise<Model>}
    */
   async create(data) {
-    const { options, defaultValue, ...rest } = data;
+    const { category_id, options, defaultValue, ...rest } = data;
     const settings = { options, defaultValue };
     const insertData = { ...rest, settings };
     if(defaultValue && options && !options.find(opt => opt.value === defaultValue)) {
       throw new Error("Значение defaultValue не найдено в переданом списке options");
     }
-    
+
+        
     return Attribute.create(insertData);
   }
 

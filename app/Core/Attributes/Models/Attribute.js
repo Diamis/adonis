@@ -45,6 +45,11 @@ class Attribute extends Model {
   static get validations() {
     return ["decimal"]
   }
+
+  category() {
+    return this.belongsToMany('App/Core/Categories/Models/Category')
+      .pivotTable('category_attributes');
+  }
 }
 
 module.exports = Attribute;
