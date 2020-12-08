@@ -1,8 +1,20 @@
 'use strict';
 
-const AttributeService = use("App/Core/Attributes/Services/AttributeService");
+const Attribute = use('App/Core/Attributes/Models/Attribute');
+const AttributeService = use('App/Core/Attributes/Services/AttributeService');
 
 class AttributeController {
+  async index({ response }) {
+    const attributes = await Attribute.all();
+    return response.status(200).send(attributes);
+  }
+
+  async current({ params: { attributeId }, response }) {
+    const service = new AttributeService();
+    const attribute = await service.findById(attributeId);
+    return response.status(200).send(attribute);
+  }
+
   async store({ request, response }) {
     const data = request.all();
     const service = new AttributeService();
@@ -24,4 +36,4 @@ class AttributeController {
   }
 }
 
-module.exports = AttributeController
+module.exports = AttributeController;

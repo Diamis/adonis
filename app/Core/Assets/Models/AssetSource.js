@@ -1,6 +1,6 @@
-"use script";
+'use script';
 
-const Model = use("Model");
+const Model = use('Model');
 
 class AssetSource extends Model {
   static get table() {

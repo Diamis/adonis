@@ -2,7 +2,7 @@
 
 const { formatters } = use('Validator');
 
-class AttributesCreateRequest {
+class AttributesUpdateGroupRequest {
   async authorize() {
     return true;
   }
@@ -16,4 +16,4 @@ class AttributesCreateRequest {
   }
 }
 
-module.exports = AttributesCreateRequest;
+module.exports = AttributesUpdateGroupRequest;

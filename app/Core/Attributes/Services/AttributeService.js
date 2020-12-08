@@ -1,6 +1,6 @@
-"use script";
+'use script';
 
-const Attribute = use("App/Core/Attributes/Models/Attribute");
+const Attribute = use('App/Core/Attributes/Models/Attribute');
 
 class AttributeService {
   constructor() {
@@ -8,9 +8,20 @@ class AttributeService {
   }
 
   /**
+   * @member findById
+   *
+   * @param {number}   id
+   *
+   * @return {Promise<Model>}
+   */
+  async findById(id) {
+    return Attribute.all(id);
+  }
+
+  /**
    * @method create
-   * 
-   * @param {Object}    data 
+   *
+   * @param {Object}    data
    * @param {string}    data.type
    * @param {string}    data.name
    * @param {number}    data.sort
@@ -21,18 +32,17 @@ class AttributeService {
    * @param {string}    data.options[].label
    * @param {string}    data.options[].value
    * @param {any}       data.defaultValue
-   * 
+   *
    * @return {Promise<Model>}
    */
   async create(data) {
     const { category_id, options, defaultValue, ...rest } = data;
     const settings = { options, defaultValue };
     const insertData = { ...rest, settings };
-    if(defaultValue && options && !options.find(opt => opt.value === defaultValue)) {
-      throw new Error("Значение defaultValue не найдено в переданом списке options");
+    if (defaultValue && options && !options.find((opt) => opt.value === defaultValue)) {
+      throw new Error('Значение defaultValue не найдено в переданом списке options');
     }
 
-        
     return Attribute.create(insertData);
   }
 

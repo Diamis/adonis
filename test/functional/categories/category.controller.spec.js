@@ -11,11 +11,15 @@ test('add validation check', async ({ client }) => {
   // check name
   response = await client.post('/api/categories').type('json').accept('json').send(data).end();
   response.assertStatus(400);
-  response.assertJSON({ errors: [{
-      title: 'required',
-      detail: 'You must provide a field "name"',
-      source: { pointer: 'name' }
-  }] });
+  response.assertJSON({
+    errors: [
+      {
+        title: 'required',
+        detail: 'You must provide a field "name"',
+        source: { pointer: 'name' },
+      },
+    ],
+  });
 
   // add category
   data = { name: 'Категория Cyrillic' };
@@ -27,7 +31,7 @@ test('add validation check', async ({ client }) => {
     slug: 'kategoriya-cyrillic',
     left: 2,
     right: 3,
-    level: 0
+    level: 0,
   });
 
   // add categories with children
@@ -35,15 +39,9 @@ test('add validation check', async ({ client }) => {
     name: 'root children',
     children: [
       { name: 'children one' },
-      { name: 'children two'},
-      { name: 'children tree',
-        children: [
-          { name: 'tree children one' },
-          { name: 'tree children two' },
-          { name: 'tree children tree' }
-        ]
-      }
-    ]
+      { name: 'children two' },
+      { name: 'children tree', children: [{ name: 'tree children one' }, { name: 'tree children two' }, { name: 'tree children tree' }] },
+    ],
   };
   response = await client.post('/api/categories').type('json').accept('json').send(data).end();
   response.assertStatus(201);
@@ -53,7 +51,7 @@ test('add validation check', async ({ client }) => {
     slug: 'root-children',
     left: 4,
     right: 17,
-    level: 0
+    level: 0,
   });
 });
 
@@ -61,15 +59,13 @@ test('delete validation check', async ({ client }) => {
   let response;
   const data = {
     name: 'remove category',
-    children: [
-      { name: 'remove children one' },
-      { name: 'remove children two'},
-      { name: 'remove children tree' }
-    ]
+    children: [{ name: 'remove children one' }, { name: 'remove children two' }, { name: 'remove children tree' }],
   };
 
   // Удаляем категорию вместе с ее потомками
-  const { body: { id } } = await client.post('/api/categories').type('json').accept('json').send(data).end();
+  const {
+    body: { id },
+  } = await client.post('/api/categories').type('json').accept('json').send(data).end();
   response = await client.delete(`/api/categories/${id}`).end();
   response.assertStatus(204);
 
